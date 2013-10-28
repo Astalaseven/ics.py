@@ -3,7 +3,7 @@ import utils
 class ParseError(Exception):
     pass
 
-class ContentLine:
+class ContentLine(object):
 
     def __eq__(self, other):
         ret = (self.name == other.name 
