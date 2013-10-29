@@ -47,21 +47,25 @@ class Section(Container):
 			self.append(item)
 
 	def __index_for_mandatory(self, name):
-		for i in range(len(Mandatory)):
-			if Mandatory[i][0] == 'name':
+		for i in range(len(self.Mandatory)):
+			if self.Mandatory[i][0] == name:
 				return i
 		return None
 
 	def __getattr__(self, attr):
 		i = self.__index_for_mandatory(attr)
-		return super(Section, self).__getattr__(attr) if i is None else self[i]
+		return self.__dict__[attr] if i is None else self[i]
 
 class Calendar(Section):
+	Mandatory = ()
+	Name = 'VCALENDAR'
+
+class Event(Section):
 	Mandatory = (
 		('start', StartDate),
 		('end', EndDate),
 	)
-	Name = 'VCALENDAR'
+	Name = 'VEVENT'
 
 Properties_class = [StartDate, EndDate, Location, Calendar]
 Properties = {klass.Name: klass for klass in Properties_class}

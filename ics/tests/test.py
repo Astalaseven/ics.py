@@ -139,16 +139,20 @@ class TestCalendar(unittest.TestCase):
     def test_section(self):
         self.assertEqual('BEGIN:VSECTION\nEND:VSECTION', str(Section()))
 
-    def test_calendar(self):
+    def test_event(self):
         t1 = datetime(2013, 8, 22, 13, 41, 27)
         ts1 = '2013-08-22 13:41:27'
         t2 = datetime(2013, 8, 22, 15, 41, 27)
         ts2 = '2013-08-22 15:41:27'
-        cal = Calendar(start=t1, end=t2)
+        ev = Event(start=t1, end=t2)
         self.assertEqual(
-            'BEGIN:VCALENDAR\nDTSTART:'+ts1+'\nDTEND:'+ts2+'\nEND:VCALENDAR', 
-            str(cal)
+            'BEGIN:VEVENT\nDTSTART:'+ts1+'\nDTEND:'+ts2+'\nEND:VEVENT', 
+            str(ev)
         )
+        self.assertEqual(t1, ev.start.value)
+        self.assertEqual(ts1, ev.start.valueAsString())
+        self.assertEqual(t2, ev.end.value)
+        self.assertEqual(ts2, ev.end.valueAsString())
 
 if __name__ == '__main__':
     unittest.main()
