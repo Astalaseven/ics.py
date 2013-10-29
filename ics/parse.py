@@ -1,4 +1,5 @@
 import utils
+import collections
 
 class ParseError(Exception):
     pass
@@ -87,6 +88,9 @@ class Container(list):
 
 
 def unfold_lines(physical_lines):
+    if not isinstance(physical_lines, collections.Iterable):
+        # TODO : better error
+        raise ParseError('Not an iterable')
     current_line = ''
     for line in physical_lines:
         if len(line.strip()) == 0:
@@ -124,16 +128,16 @@ def string_to_container(txt):
     return lines_to_container(txt.split('\n'))
 
 if __name__ == "__main__":
-    from fixture import cal1
+    from tests.fixture import cal1
     
     def printTree(elem, lvl=0):
         if isinstance(elem, list) or isinstance(elem, Container):
             if isinstance(elem, Container):
-                print('   '*lvl, elem.name)
+                print("{}{}".format('   '*lvl, elem.name))
             for sub_elem in elem:
                 printTree(sub_elem, lvl+1)
         elif isinstance(elem, ContentLine):
-            print('   '*lvl, elem.name, elem.params, elem.value)
+            print("{}{}{}".format('   '*lvl, elem.name, elem.params, elem.value))
         else:
             print("Wuuut ?")
 
