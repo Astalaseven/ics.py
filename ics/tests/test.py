@@ -1,4 +1,5 @@
 import unittest
+from ics.calendar import *
 from ics.parse import ParseError, ContentLine, Container, unfold_lines, string_to_container, lines_to_container
 from fixture import cal1, cal2, cal3, cal4, cal5, cal6, cal7, cal8, cal9, unfolded_cal1, unfolded_cal2, unfolded_cal6
 try:
@@ -139,10 +140,15 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual('BEGIN:VSECTION\nEND:VSECTION', str(Section()))
 
     def test_calendar(self):
-        t = datetime(2013, 8, 22, 13, 41, 27)
-        ts = '2013-08-22 13:41:27'
+        t1 = datetime(2013, 8, 22, 13, 41, 27)
+        ts1 = '2013-08-22 13:41:27'
+        t2 = datetime(2013, 8, 22, 15, 41, 27)
         ts2 = '2013-08-22 15:41:27'
-        self.assertEqual('BEGIN:VCALENDAR\nDTSTART:'+ts+'\nDTEND:'+ts2+'\nEND:VCALENDAR', Calendar(start=t))
+        cal = Calendar(start=t1, end=t2)
+        self.assertEqual(
+            'BEGIN:VCALENDAR\nDTSTART:'+ts1+'\nDTEND:'+ts2+'\nEND:VCALENDAR', 
+            str(cal)
+        )
 
 if __name__ == '__main__':
     unittest.main()
