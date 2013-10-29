@@ -92,6 +92,8 @@ def unfold_lines(physical_lines):
         if len(line.strip()) == 0:
             continue
         elif not current_line:
+            if line[0] == ' ':
+                raise ParseError("No line to continue")
             current_line = line
         elif line[0] == ' ':
             current_line += line[1:]

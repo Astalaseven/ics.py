@@ -1,12 +1,11 @@
 import unittest
 from ics.parser import ParseError, ContentLine, Container, unfold_lines, string_to_container, lines_to_container
+from ics.calendar import *
 from fixture import cal1, cal2, cal3, cal4, cal5, cal6, cal7, cal8, cal9, unfolded_cal1, unfolded_cal2, unfolded_cal6
-
 try:
     from urllib.request import urlopen
 except ImportError:
     from urllib2 import urlopen
-
 
 class TestContentLine(unittest.TestCase):
     dataset = {
@@ -127,6 +126,24 @@ class Test_functional(unittest.TestCase):
         url = "http://scientia-web.ulb.ac.be/gehol/index.php?Student/Calendar/%23SPLUS35F0F0/1-14.ics"
         ics = string_to_container(urlopen(url).read().decode('iso-8859-1'   ))[0]
         self.assertTrue(ics)
+
+class TestCalendar(unittest.TestCase):
+    def test_property(self):
+        self.assertEqual('a:b', str(Property('b', name='a')))
+        self.assertEqual('a;b=c:d', str(Property('d', name='a', params={'b':['c']})))
+
+    def test_date(self):
+        self.assertEqual('a:2013-08-29 11:31:24', str(ICSDate(datetime(2013,8,29,11,31,24), name='a')))
+        self.assertEqual('DTSTART:2013-08-29 11:31:24', str(StartDate(datetime(2013,8,29,11,31,24))))
+
+    def test_section(self):
+        self.assertEqual('BEGIN:VSECTION\nEND:VSECTION', str(Section()))
+
+    def test_calendar(self):
+        t = datetime(2013, 8, 22, 13, 41, 27)
+        ts = '2013-08-22 13:41:27'
+        ts2 = '2013-08-22 15:41:27'
+        self.assertEqual('BEGIN:VCALENDAR\nDTSTART:'+ts+'\nDTEND:'+ts2+'\nEND:VCALENDAR', Calendar(start=t))
 
 if __name__ == '__main__':
     unittest.main()
