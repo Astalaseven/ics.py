@@ -1,10 +1,10 @@
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 from six import PY2, PY3
 from six.moves import filter, map, range
 
 import unittest
 from ics.parse import ParseError, ContentLine, Container, unfold_lines, string_to_container, lines_to_container
-from fixture import cal1, cal2, cal3, cal4, cal5, cal6, cal7, cal8, cal9, unfolded_cal1, unfolded_cal2, unfolded_cal6
+from .fixture import cal1, cal2, cal3, cal4, cal5, cal6, cal7, cal8, cal9, unfolded_cal1, unfolded_cal2, unfolded_cal6
 
 
 if PY3:
@@ -61,15 +61,15 @@ class Test_unfold_lines(unittest.TestCase):
 
     def test_simple(self):
         dataset = {
-            'a'          : ('a',),
-            'ab'         : ('ab',),
-            'a\nb'       : ('a', 'b',),
-            'a\n b'      : ('ab',),
-            'a \n b'     : ('a b',),
-            'a\n b\nc'   : ('ab', 'c',),
-            'a\nb\n c'   : ('a', 'bc',),
-            'a\nb\nc'    : ('a', 'b', 'c',),
-            'a\n b\n c'  : ('abc',),
+            'a': ('a',),
+            'ab': ('ab',),
+            'a\nb': ('a', 'b',),
+            'a\n b': ('ab',),
+            'a \n b': ('a b',),
+            'a\n b\nc': ('ab', 'c',),
+            'a\nb\n c': ('a', 'bc',),
+            'a\nb\nc': ('a', 'b', 'c',),
+            'a\n b\n c': ('abc',),
             'a \n b \n c': ('a b c',),
         }
         for line in dataset:
@@ -78,22 +78,22 @@ class Test_unfold_lines(unittest.TestCase):
             self.assertEqual(expected, got)
 
     def test_empty(self):
-        self.assertEqual(list(unfold_lines([])),[])
+        self.assertEqual(list(unfold_lines([])), [])
 
     def test_one_line(self):
-        self.assertEqual(list(unfold_lines(cal6.split('\n'))),unfolded_cal6)
+        self.assertEqual(list(unfold_lines(cal6.split('\n'))), unfolded_cal6)
 
     def test_two_lines(self):
-         self.assertEqual(list(unfold_lines(cal3.split('\n'))),['BEGIN:VCALENDAR', 'END:VCALENDAR'])
+        self.assertEqual(list(unfold_lines(cal3.split('\n'))), ['BEGIN:VCALENDAR', 'END:VCALENDAR'])
 
     def test_no_empty_lines(self):
-        self.assertEqual(list(unfold_lines(cal7.split('\n'))),['BEGIN:VCALENDAR', 'END:VCALENDAR'])
+        self.assertEqual(list(unfold_lines(cal7.split('\n'))), ['BEGIN:VCALENDAR', 'END:VCALENDAR'])
 
     def test_no_whitespace_lines(self):
-        self.assertEqual(list(unfold_lines(cal8.split('\n'))),['BEGIN:VCALENDAR', 'END:VCALENDAR'])
+        self.assertEqual(list(unfold_lines(cal8.split('\n'))), ['BEGIN:VCALENDAR', 'END:VCALENDAR'])
 
     def test_first_line_empty(self):
-        self.assertEqual(list(unfold_lines(cal9.split('\n'))),['BEGIN:VCALENDAR', 'END:VCALENDAR'])
+        self.assertEqual(list(unfold_lines(cal9.split('\n'))), ['BEGIN:VCALENDAR', 'END:VCALENDAR'])
 
 
 class Test_parse(unittest.TestCase):
@@ -101,7 +101,7 @@ class Test_parse(unittest.TestCase):
     def test_parse(self):
         content = string_to_container(cal5)
         self.assertEqual(1, len(content))
-        
+
         cal = content.pop()
         self.assertEqual('VCALENDAR', cal.name)
         self.assertTrue(isinstance(cal, Container))
@@ -113,8 +113,7 @@ class Test_parse(unittest.TestCase):
         ics = 'DTSTART;TZID=Europe/Brussels:20131029T103000'
         reader = lines_to_container([ics])
         self.assertEqual(next(iter(reader)), TestContentLine.dataset[ics])
-        
-    
+
     def test_many_lines(self):
         i = 0
         for line in string_to_container(cal1)[0]:
@@ -124,6 +123,7 @@ class Test_parse(unittest.TestCase):
             if line.name == 'DESCRIPTION':
                 self.assertEqual('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae facilisis enim. Morbi blandit et lectus venenatis tristique. Donec sit amet egestas lacus. Donec ullamcorper, mi vitae congue dictum, quam dolor luctus augue, id cursus purus justo vel lorem. Ut feugiat enim ipsum, quis porta nibh ultricies congue. Pellentesque nisl mi, molestie id sem vel, vehicula nullam.', line.value)
             i += 1
+
 
 class Test_functional(unittest.TestCase):
 

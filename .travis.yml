@@ -1,0 +1,22 @@
+language: python
+python:
+  - "2.7"
+  - "3.3"
+# command to install dependencies
+install: 
+  - "pip install python-dateutil arrow six"
+  - "pip install python-coveralls pytest pytest-cov pytest-flakes"
+# command to run tests
+script: 
+  - "py.test --flakes --cov ics tests/test.py"
+after_success:
+  - "coveralls"
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#icspy"
+    use_notice: false
+    skip_join: true
+    template:
+      - "build#%{build_number} (%{branch} - %{commit}): %{message}"
+      - "%{build_url}"
