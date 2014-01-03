@@ -30,7 +30,9 @@ from ics.event import Event
 from ics.eventlist import EventList
 from ics.icalendar import Calendar
 
+
 class TestContentLine(unittest.TestCase):
+
     dataset = {
         'haha:': ContentLine('haha'),
         ':hoho': ContentLine('', {}, 'hoho'),
@@ -179,8 +181,10 @@ class TestParse(unittest.TestCase):
                     vehicula nullam.', line.value)
             i += 1
 
+
 class TestEvent(unittest.TestCase):
-    def test_event(self):   
+
+    def test_event(self):
         e = Event(begin=0, end=20)
         self.assertEqual(e.begin.timestamp, 0)
         self.assertEqual(e.end.timestamp, 20)
@@ -199,14 +203,16 @@ class TestEvent(unittest.TestCase):
 
         g = Event(begin=0, end=20) | Event(begin=10, end=30)
         self.assertEqual(tuple(map(lambda x: x.timestamp, g)), (10, 20))
-        
+
         g = Event(begin=0, end=20) | Event(begin=5, end=15)
         self.assertEqual(tuple(map(lambda x: x.timestamp, g)), (5, 15))
-        
+
         g = Event() | Event()
         self.assertEqual(g, (None, None))
 
+
 class TestEventList(unittest.TestCase):
+
     from time import time
 
     def test_evlist(self):
@@ -214,15 +220,17 @@ class TestEventList(unittest.TestCase):
         t = self.time()
 
         self.assertEqual(len(l), 0)
-        e = Event(begin=t, end=t+1)
+        e = Event(begin=t, end=t + 1)
         l.append(e)
         self.assertEqual(len(l), 1)
         self.assertEqual(l[0], e)
         self.assertEqual(l.today(), [e])
-        l.append(Event(begin=t, end=t+86400))
+        l.append(Event(begin=t, end=t + 86400))
         self.assertEqual(l.today(strict=True), [e])
 
+
 class TestCalendar(unittest.TestCase):
+
     def test_imports(self):
         c = Calendar(cal1)
         self.assertEqual(1, len(c.events))
@@ -246,6 +254,7 @@ class TestCalendar(unittest.TestCase):
             self.assertEqual(e.end, f.end)
             self.assertEqual(e.name, f.name)
 
+
 class TestFunctional(unittest.TestCase):
 
     def test_gehol(self):
@@ -258,6 +267,7 @@ class TestFunctional(unittest.TestCase):
 
             ics = string_to_container(ics)[0]
             self.assertTrue(ics)
+
 
 if __name__ == '__main__':
     unittest.main()
